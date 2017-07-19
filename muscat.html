@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="./muscat.css">
+	<meta charset="UTF-8">
+	<title>Muscat</title>
+	<script type="text/javascript" src="./jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="./muscat.js"/></script>
+</head>
+<body style="background-color: #EEE;" onload="env.Init();">
+	<div id="contents">
+		<div id="canvas_outer">
+			<canvas id="main_canvas" width="300" height="300"></canvas>	
+		</div>
+
+		<div class="tab_control">
+			<div class="tab_thumb">
+				<span>Evaluation</span>
+				<span>Console</span>
+				<span>Settings</span>
+			</div>
+			<div class="tab_items">
+				<span id="evaluation" class="selected">
+					<input id="formula" type="text" value="y - sin(x)"/>=0
+					<button id="button_evaluate">Evaluate</button>
+				</span>
+				<span id="settings">
+					<h2>Settings</h2>
+					<div class="group_box">
+						<h3>Resolution</h3>
+						<label for="n_width">Width:</label>
+						<input type="number" name="n_width" min="50"/>
+						<label for="n_width">Height:</label>
+						<input type="number" name="n_width" min="50"/>
+						<!-- color, width -->
+					</div>
+					<div>
+						<button>Apply</button>	
+					</div>
+				</span>
+			</div>
+		</div>		
+	</div>
+</body>
+</html>
