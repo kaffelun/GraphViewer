@@ -27,6 +27,10 @@ function Parser(type) {
 }
 
 Parser.prototype = {
+	ChangeVariable: function(character) {
+		this.keyword.pop();
+		this.keyword.push(character);
+	},
 	Evaluate: function(expression) {
 		// To manage with embedded evaluate
 
@@ -95,24 +99,25 @@ Parser.prototype = {
 					words[i] = this.name_const[word]; // continue
 				case "n":
 					if(next == "(" || next_type == "c" || next_type == "n" || next_type == "f") {
-						i++;
-						put_op(i, "*");
+						put_op(++i, "*");
 					}
 					break;
 				case "o":
-					if((i == 0 && word != "-" && word != "(") ||
-						( next != "-" && word != ")" && next_type == "o")) return convert_error();
+					if(((i == 0 && word != "-" && word != "(") ||
+						( next != "-" && next != "(" && word != ")" && next_type == "o"))) return convert_error();
 					if(implicit) {
 						implicit = false;
 						put_op(i, ")");
+					}
+					if(word == ")" && next == "(") {
+						put_op(++i, "*");
 					}
 					break;
 				case "f":
 					if(i == words.length - 1) return convert_error();
 					words[i] = this.name_func[word];
 					if(next != "(") {
-						i++;
-						put_op(i, "(");
+						put_op(++i, "(");
 						implicit = true;
 					}
 					break;

@@ -26,6 +26,9 @@ function Render() {
 	this.rect = {x: 0, y: 0, width: 1, height: 1};
 	this.viewport = {width: null, height: null};
 	this.context = null;
+	this.result = {
+		visible_points: 0,
+	}
 }
 
 Render.prototype = {
@@ -74,18 +77,29 @@ Render.prototype = {
 		var h = this.viewport.height;
 		var w = this.rect.width;
 		var h_inv = 1 / this.rect.height;
-
-		for(var ix = 0; ix < this.viewport.width; ix++) {
+		var visible = true;
+		var old_iy = NaN;
+		var visible_points = 0;
+		for(var ix = 0; ix <= this.viewport.width; ix++) {
 			var x = this.rect.x + ix * w_inv * w;
 			var y = env.RunFunc(x);
 			var iy = (1 - (y - this.rect.y) * h_inv ) * h;
-			if(y == NaN) ctx.moveTo(ix,0);
+			//unexpected value
+			if(isNaN(y) || !isFinite(y)) visible = false;
 			else {
-				if(ix) ctx.lineTo(ix, iy);
-				else ctx.moveTo(ix, iy);
+				var tmp_visible = 0 <= iy && iy <= this.viewport.height;
+				if(!ix && tmp_visible) ctx.moveTo(ix, iy);
+				else if(!visible && tmp_visible) {
+					ctx.moveTo(ix - 1, old_iy);
+					ctx.lineTo(ix, iy);
+				} else if(ix && visible) ctx.lineTo(ix, iy);
+				visible = tmp_visible;
+				if(visible) visible_points++;
 			}
+			old_iy = iy;
 		}
 		ctx.stroke();
+		this.result.visible_points = visible_points;
 	},
 	Flush: function() {
 

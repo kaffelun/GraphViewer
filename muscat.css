@@ -14,10 +14,10 @@
 	margin-top: 10px;
 }
 
-.tab_items span {
+.tab_items > span {
 	display: none;
 }
-.tab_items span.selected {
+.tab_items > span.selected {
 	display: inline-block;
 	border: solid 2px #666;
 	width: auto;
@@ -36,12 +36,18 @@
 	user-select: none;
 }
 
-.tab_thumb span {
+.tab_thumb > span {
 	margin: 0px;
-	padding: 0px;
+	padding: 0px 3px 0px 3px;
 	border: solid 2px #888;
 	border-radius: 3px 3px 0px 0px;
-	background: linear-gradient(top, #BBB, #555);
-	background: -webkit-gradient(linear,left top,left bottom, from(#BBB), to(#555));
+	background: linear-gradient(top, #CCC, #555);
+	background: -webkit-gradient(linear,left top,left bottom, from(#CCC), to(#666));
+	cursor: pointer;
+}
+
+.tab_thumb > span.selected {
+	background: linear-gradient(top, #AAA, #777);
+	background: -webkit-gradient(linear,left top,left bottom, from(#666), to(#999));
 	cursor: pointer;
 }

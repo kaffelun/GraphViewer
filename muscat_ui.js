@@ -1,6 +1,9 @@
 $(".tab_thumb span").on("click", function(e) {
-	$(".selected").toggleClass("selected");
-	$("#" + e.target.innerHTML).toggleClass("selected");
+	var target = $(e.target);
+	target.siblings(".selected").toggleClass("selected");
+	target.parent().siblings(".tab_items").children(".selected").toggleClass("selected");
+	target.toggleClass("selected");
+	$("#"+target.html()).toggleClass("selected");
 });
 $("#button_apply").on("click", function() {
 	env.render.SetResolution($("#n_width")[0].value|0, $("#n_height")[0].value|0)
