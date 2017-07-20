@@ -6,11 +6,12 @@
 	<title>Muscat</title>
 	<script type="text/javascript" src="./jquery-3.2.1.min.js"></script>
 	<script type="text/javascript" src="./muscat.js"/></script>
+	<script type="text/javascript" src="./parser.js"></script>
 </head>
 <body style="background-color: #EEE;" onload="env.Init();">
 	<div id="contents">
 		<div id="canvas_outer">
-			<canvas id="main_canvas" width="300" height="300"></canvas>	
+			<canvas id="main_canvas" width="600" height="600"></canvas>	
 		</div>
 
 		<div class="tab_control">
@@ -20,26 +21,39 @@
 				<span>Settings</span>
 			</div>
 			<div class="tab_items">
-				<span id="evaluation" class="selected">
-					<input id="formula" type="text" value="y - sin(x)"/>=0
+				<span id="Evaluation" class="selected">
+					<div>
+						y=<input id="formula" type="text" value="sin(x)"/>
+					</div>
+					<div>
+						 <input id="x_min" type="text" value="-pi"/>
+						 &lt;= x &lt;=
+						 <input id="x_max" type="text" value="pi"/>
+					</div>
+					<div>
+						 <input id="y_min" type="text" value="-1"/>
+						 &lt;= y &lt;=
+						 <input id="y_max" type="text" value="1"/>
+					</div>
 					<button id="button_evaluate">Evaluate</button>
 				</span>
-				<span id="settings">
+				<span id="Settings">
 					<h2>Settings</h2>
 					<div class="group_box">
 						<h3>Resolution</h3>
 						<label for="n_width">Width:</label>
-						<input type="number" name="n_width" min="50"/>
-						<label for="n_width">Height:</label>
-						<input type="number" name="n_width" min="50"/>
+						<input id="n_width" type="number" name="n_width" min="50" value="600"/>
+						<label for="n_height">Height:</label>
+						<input id="n_height" type="number" name="n_height" min="50" value="600"/>
 						<!-- color, width -->
 					</div>
 					<div>
-						<button>Apply</button>	
+						<button id="button_apply">Apply</button>	
 					</div>
 				</span>
 			</div>
 		</div>		
 	</div>
+	<script type="text/javascript" src="./muscat_ui.js"/></script>
 </body>
 </html>
