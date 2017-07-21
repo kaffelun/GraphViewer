@@ -9,6 +9,7 @@
 	<script type="text/javascript" src="./parser.js"></script>
 </head>
 <body style="background-color: #EEE;" onload="env.Init();">
+	<h1>Mascat Graph Viewer</h1>
 	<div id="contents">
 		<div id="canvas_outer">
 			<canvas id="main_canvas" width="600" height="600"></canvas>	
@@ -19,6 +20,7 @@
 				<span class="selected">Evaluation</span>
 				<span>Console</span>
 				<span>Settings</span>
+				<span>Tips</span>
 			</div>
 			<div class="tab_items">
 				<span id="Evaluation" class="selected">
@@ -34,33 +36,34 @@
 								</div>
 								<div>
 									 <input id="x_min" type="text" value="-pi"/>
-									 &lt;= x &lt;=
+									 ≦ x ≦
 									 <input id="x_max" type="text" value="pi"/>
 								</div>
 								<div>
 									 <input id="y_min" type="text" value="-1"/>
-									 &lt;= y &lt;=
+									 ≦ y ≦
 									 <input id="y_max" type="text" value="1"/>
 								</div>	
 							</span>
 							<span id="Parameter">
+								(UnderConstruction)
 								<div>
 									x=<input id="x_param" type="text" value="sin(t)"/>
 									y=<input id="y_param" type="text" value="cos(t)"/>
 								</div>
 								<div>
 									 <input id="x_min" type="text" value="-1"/>
-									 &lt;= x &lt;=
+									 ≦ x ≦
 									 <input id="x_max" type="text" value="1"/>
 								</div>
 								<div>
 									 <input id="y_min" type="text" value="-1"/>
-									 &lt;= y &lt;=
+									 ≦ y ≦
 									 <input id="y_max" type="text" value="1"/>
 								</div>
 								<div>
 									 <input id="t_min" type="text" value="-pi"/>
-									 &lt;= t &lt;=
+									 ≦ t ≦
 									 <input id="t_max" type="text" value="pi"/>
 								</div>	
 								<div>
@@ -73,7 +76,7 @@
 					<button id="button_evaluate">Evaluate</button>
 				</span>
 				<span id="Console">
-					
+					Under Construction
 				</span>
 				<span id="Settings">
 					<h2>Settings</h2>
@@ -88,6 +91,31 @@
 					<div>
 						<button id="button_apply">Apply</button>	
 					</div>
+				</span>
+				<span id="Tips">
+					<h2>Tips</h2>
+					<table>
+						<thead><th>Sign</th><th>Semantics</th></thead>
+						<tbody>
+							<tr><td>+</td><td>Addition</td></tr>
+							<tr><td>-</td><td>Subtraction</td></tr>
+							<tr><td>*</td><td>Multiplication</td></tr>
+							<tr><td>/</td><td>Division</td></tr>
+							<tr><td>%</td><td>Modulo function</td></tr>
+							<tr><td>sin</td><td>Sine function</td></tr>
+							<tr><td>cos</td><td>Cosine function</td></tr>
+							<tr><td>tan</td><td>Tangent function</td></tr>
+							<tr><td>floor, gauss</td><td>Gauss function</td></tr>
+							<tr><td>ceil</td><td>Ceiling function</td></tr>
+							<tr><td>sqrt</td><td>Square function</td></tr>
+							<tr><td>abs</td><td>Absolute value</td></tr>
+							<tr><td>exp</td><td>Exponential function</td></tr>
+							<tr><td>log</td><td>Logarithm function (can get extra argument as the Base)</td></tr>
+							<tr><td>pi</td><td>The number pi</td></tr>
+							<tr><td>e</td><td>The base of the natural logarithm</td></tr>
+						</tbody>
+					</table>
+					<p>Note: Distinguish between upper and lower case letters.</p>
 				</span>
 			</div>
 		</div>		

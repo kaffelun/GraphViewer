@@ -51,3 +51,31 @@
 	background: -webkit-gradient(linear,left top,left bottom, from(#666), to(#999));
 	cursor: pointer;
 }
+
+table {
+	border-collapse: collapse;
+	text-align: left;
+	line-height: 1.5;
+
+}
+table thead th {
+	padding: 10px;
+	font-weight: bold;
+	vertical-align: top;
+	color: #555;
+	border-bottom: 3px solid #555;
+}
+table tbody th {
+	width: 150px;
+	padding: 10px;
+	font-weight: bold;
+	vertical-align: top;
+	border-bottom: 1px solid #ccc;
+	background: #f3f6f7;
+}
+table td {
+	width: 350px;
+	padding: 10px;
+	vertical-align: top;
+	border-bottom: 1px solid #ccc;
+}
