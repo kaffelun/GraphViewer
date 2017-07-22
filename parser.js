@@ -67,7 +67,7 @@ Parser.prototype = {
 			if(!is_characters(c)) continue;
 			if(is_numbers(c)) {
 				if(!in_number) {
-					if(buffer != "") return parse_error();
+					if(buffer != "" && buffer != "-") return parse_error();
 					in_number = true;
 				}
 				buffer += c;
@@ -78,7 +78,7 @@ Parser.prototype = {
 				in_number = false;
 			}
 			buffer += c;
-			if(is_keyword(buffer) && c != "e" && expression[i+2] != "p") register();
+			if(is_keyword(buffer) && !(expression.slice(i,3) == "exp")) register();
 		}
 		if(is_keyword(buffer) || in_number) register();
 		if(buffer != "") return parse_error();
@@ -87,7 +87,7 @@ Parser.prototype = {
 		var eval_str = "", word = "";
 		var implicit = 0;
 		var bracket_stack = [0];
-		var power_stack = [];
+		var connectional_mul = [];
 		function put_op(n, op) {
 			words.splice(n,0,op);
 			types.splice(n,0,"o");
@@ -140,6 +140,7 @@ Parser.prototype = {
 				i--;
 			}
 		}
+		console.log("n:"+words);
 
 		var guard = false;
 		for(var i = 0; i < words.length; i++) {
@@ -152,43 +153,57 @@ Parser.prototype = {
 					}
 					// tacit multiply
 					if(tacit_multiply(i)) {
+						if(words[i+1] != "(") {
+							put_op(i++, "(");
+							implicit++;
+						}
 						put_op(++i, "*");
-						guard = true;
 					}
 					break;
 				case "f":
 					if(words[i+1] != "(") {
-						implicit++;
 						put_op(++i, "(");
+						implicit++;
 					}
 					break;
 				case "o":
-					if(implicit && !(guard && word == "*") ) {
+					if(implicit) {
 						put_op(i++, ")");
 						implicit--;
 					}
-					if(word == ")") {
-						if(tacit_multiply(i)) put_op(++i, "*");
+					if(word == ")" && tacit_multiply(i)) {
+						put_op(++i, "(");
+						put_op(++i, "*");
+						implicit++;
 					}
-					guard = false;
 			}
 		}
 		solve_implicit();
+		console.log("r:"+words.join(''));
 
 		// power
 		var i = -1, n = -1;
+		function getCounterpart(w, x, dif) {
+			var bracket = 1;
+			while(bracket > 0 && 0 < x && x < words.length) {
+				if(words[x] == "(") bracket += dif;
+				if(words[x] == ")") bracket -= dif;
+				x += dif;
+			}
+			return x;
+		}
 		while(true) {
 			i = words.indexOf("^", i + 1);
 			if(i == -1) break;
 			words[i] = ",";
-			if(words[i-1] == ")") n = words.lastIndexOf("(",i);
-			else n = types.lastIndexOf("o",i - 1);
-			if(n == -1) n = 0;
-			if(types[n-1] == "f") n--;
+			if(words[i-1] == ")") n = getCounterpart(words, i-2, -1);
+			else n = types.lastIndexOf("o",i - 1) + 1;
+			if(words[n] == "(") n--;
+			if(n < 0) n = 0;
 			words.splice(n, 0, "Math.pow", "(");
 			types.splice(n, 0, "f", "o");
 			i += 2;
-			if(words[i+1] == "(") n = words.indexOf(")", i);
+			if(words[i+1] == "(") n = getCounterpart(words, i+2, +1);
 			else n = types.indexOf("o",i + 1);
 			if(n == -1) n = words.length;
 			words.splice(n, 0, ")");
@@ -196,6 +211,7 @@ Parser.prototype = {
 		}
 
 		console.log(words);
+		console.log("p:"+words.join(''));
 		return words.join('');
 	}
 }
