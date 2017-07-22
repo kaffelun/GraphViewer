@@ -9,12 +9,17 @@ System.prototype = {
 		this.parser = new Parser();
 		this.const_parser = new Parser("const");
 	},
-	SetFunc: function(str) {
+	SetFunc: function(mode, f) {
 		// this is managed code.
-		this.func = new Function("x", "return " + this.parser.Evaluate(str));
+		if(mode == "Explicit") {
+			this.func = [new Function("x", "return " + this.parser.Evaluate(f))];
+		} else if (mode == "Parameter") {
+			this.func = [new Function("t", "return " + this.parser.Evaluate(f[0])),
+			             new Function("t", "return " + this.parser.Evaluate(f[1]))];
+		}
 	},
-	RunFunc: function(x) {
-		return this.func(x);
+	RunFunc: function(x,n) {
+		return this.func[n](x);
 	},
 	EvalConst: function(x) {
 		return eval(this.const_parser.Evaluate(x));
@@ -25,7 +30,7 @@ function Render() {
 	// virtual choord rect (half size)
 	this.rect = {x: 0, y: 0, width: 1, height: 1};
 	this.viewport = {width: null, height: null};
-	this.t_range = {max: 0, min: 0};
+	this.t_range = {start: 0, len: 1};
 	this.density = 100;
 	this.context = null;
 	this.result = {
@@ -50,7 +55,7 @@ Render.prototype = {
 		if(!isNaN(x_max)) this.rect.width = x_max - this.rect.x;
 		if(!isNaN(y_min)) this.rect.y = y_min;
 		if(!isNaN(y_max)) this.rect.height = y_max - this.rect.y;
-		if(!isNaN(t_min)) this.t_range.min = t_min;
+		if(!isNaN(t_min)) this.t_range.start = t_min;
 		if(!isNaN(t_max)) this.t_range.len = t_max - t_min;
 		if(!isNaN(density)) this.density = density;
 	},
@@ -89,7 +94,7 @@ Render.prototype = {
 		if(mode == "Explicit") {
 			for(var ix = 0; ix <= vw; ix++) {
 				var x = this.rect.x + ix * w / vw;
-				var y = env.RunFunc(x);
+				var y = env.RunFunc(x, 0);
 				var iy = (1 - (y - this.rect.y) / h ) * vh;
 				//unexpected value
 				if(isNaN(y) || !isFinite(y)) visible = false;
@@ -106,12 +111,12 @@ Render.prototype = {
 				old_iy = iy;
 			}
 		} else if (mode == "Parameter") {
-			for(var t = 0; t <= this.density; t++) {
-				var x = env.RunFunc(t / this.density, 0);
-				var y = env.RunFunc(t / this.density * this.t_max, 1);
-				var ix = (x - this.rect.x) * vw / w;
-				var iy = (1 - (y - this.rect.y) / vh ) * h;
-				if(isNaN(y) || !isFinite(y) || isNaN(x) || !isFinite(x)) visible = false;
+			for(var it = 0; it <= this.density; it++) {
+				var t = it / this.density * this.t_range.len + this.t_range.start;
+				var x = env.RunFunc(t, 0), y = env.RunFunc(t, 1);
+				var ix = (0 + (x - this.rect.x) / w ) * vw;
+				var iy = (1 - (y - this.rect.y) / h ) * vh;
+				if(isNaN(x) || !isFinite(x) || isNaN(y) || !isFinite(y)) visible = false;
 				else {
 					var tmp_visible = 0 <= iy && iy <= vh
 									  0 <= ix && ix <= vw;

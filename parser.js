@@ -22,7 +22,7 @@ function Parser(type) {
 	this.numbers = /^[\x30-\x39]+$/;
 	this.keyword = Object.keys(this.name_func).concat(
 	               Object.keys(this.name_const).concat(this.operator));
-	if(type != "const") this.keyword.push("x");
+	if(type != "const") this.keyword.push("?");
 	this.error_message = "";
 }
 
