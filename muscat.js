@@ -139,5 +139,8 @@ Render.prototype = {
 	}
 }
 
+function Console() {
+	this.elem = $(".console_viewer");
+}
 
 var env = new System();

@@ -66,7 +66,7 @@ table thead th {
 	border-bottom: 3px solid #555;
 }
 table tbody th {
-	width: 150px;
+	width: 100px;
 	padding: 10px;
 	font-weight: bold;
 	vertical-align: top;
@@ -74,8 +74,23 @@ table tbody th {
 	background: #f3f6f7;
 }
 table td {
-	width: 350px;
+	width: 250px;
 	padding: 10px;
 	vertical-align: top;
 	border-bottom: 1px solid #ccc;
+}
+
+.console_viewer {
+	display: block;
+	background-color: black;
+	color: white;
+	font-size: 13pt;
+	width: 600px;
+	height: 300px;
+	overflow: scroll;
+}
+
+code::after {
+	content: "\A";
+	white-space: pre;
 }

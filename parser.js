@@ -19,7 +19,7 @@ function Parser(type) {
 	};
 	this.operator = ['+','-','*','/','%','^','(',')',',']
 	this.characters = /^[\x21-\x7E]+$/;
-	this.numbers = /^[\x30-\x39]+$/;
+	this.numbers = /^[\x30-\x39.]+$/;
 	this.keyword = Object.keys(this.name_func).concat(
 	               Object.keys(this.name_const).concat(this.operator));
 	if(type != "const") this.keyword.push("?");
@@ -32,6 +32,8 @@ Parser.prototype = {
 		this.keyword.push(character);
 	},
 	Evaluate: function(expression) {
+
+		expression = expression.toLowerCase();
 		// To manage with embedded evaluate
 
 		var self = this;
@@ -78,7 +80,9 @@ Parser.prototype = {
 				in_number = false;
 			}
 			buffer += c;
-			if(is_keyword(buffer) && !(expression.slice(i,3) == "exp")) register();
+			if(is_keyword(buffer) &&
+				!(expression.substr(i,3) == "exp") &&
+				!(expression.substr(i,3) == "tan")) register();
 		}
 		if(is_keyword(buffer) || in_number) register();
 		if(buffer != "") return parse_error();
@@ -132,7 +136,7 @@ Parser.prototype = {
 		while(true) {
 			i = words.indexOf("-", i + 1);
 			if(i == -1) break;
-			if( ( i == 0 || ( types[i-1] == "o" && words[i-1] != ")" ) ) &&
+			if( ( i == 0 || ( types[i-1] == "o" && words[i-1] != ")" ) || types[i-1] == "f" ) &&
 					(types[i+1] == "n" || words[i+1] == "(") ) {
 				words.splice(i,1);
 				types.splice(i,1);
@@ -150,12 +154,18 @@ Parser.prototype = {
 					if(implicit && types[i+1] == "f") {
 						put_op(++i, ")");
 						implicit--;
+						if(guard) {
+							put_op(++i, ")");
+							implicit--;
+							guard = false;
+						}
 					}
 					// tacit multiply
 					if(tacit_multiply(i)) {
-						if(words[i+1] != "(") {
+						if(words[i+1] != "(" && types[i+1] != "f") {
 							put_op(i++, "(");
 							implicit++;
+							guard = true;
 						}
 						put_op(++i, "*");
 					}
@@ -167,30 +177,32 @@ Parser.prototype = {
 					}
 					break;
 				case "o":
-					if(implicit) {
-						put_op(i++, ")");
-						implicit--;
+					if(implicit && word != "^") {
+						while(--implicit >= 0) put_op(i++, ")");
+						implicit++;
 					}
 					if(word == ")" && tacit_multiply(i)) {
-						put_op(++i, "(");
 						put_op(++i, "*");
-						implicit++;
+						if(words[i+1] != "(" && types[i+1] != "f") {
+							put_op(++i, "(");
+							implicit++;
+						}
 					}
 			}
 		}
-		solve_implicit();
+		while(implicit-- > 0) put_op(i++, ")");
 		console.log("r:"+words.join(''));
 
 		// power
 		var i = -1, n = -1;
 		function getCounterpart(w, x, dif) {
 			var bracket = 1;
-			while(bracket > 0 && 0 < x && x < words.length) {
+			while(bracket > 0 && 0 <= x && x < words.length) {
 				if(words[x] == "(") bracket += dif;
 				if(words[x] == ")") bracket -= dif;
 				x += dif;
 			}
-			return x;
+			return x + 1;
 		}
 		while(true) {
 			i = words.indexOf("^", i + 1);
@@ -198,8 +210,9 @@ Parser.prototype = {
 			words[i] = ",";
 			if(words[i-1] == ")") n = getCounterpart(words, i-2, -1);
 			else n = types.lastIndexOf("o",i - 1) + 1;
-			if(words[n] == "(") n--;
+			//if(words[n] == "(") n--;
 			if(n < 0) n = 0;
+			if(types[n-1] == "f") n--;
 			words.splice(n, 0, "Math.pow", "(");
 			types.splice(n, 0, "f", "o");
 			i += 2;

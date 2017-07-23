@@ -1,16 +1,16 @@
 $(".tab_thumb span").on("click", function(e) {
 	var target = $(e.target);
-	target.siblings(".selected").toggleClass("selected");
-	target.parent().siblings(".tab_items").children(".selected").toggleClass("selected");
-	target.toggleClass("selected");
-	$("#"+target.html()).toggleClass("selected");
+	target.siblings(".selected").removeClass("selected");
+	target.parent().siblings(".tab_items").children(".selected").removeClass("selected");
+	target.addClass("selected");
+	$("#"+target[0].id.slice(0,-4)).addClass("selected");
 });
 $("#button_apply").on("click", function() {
 	env.render.SetResolution($("#n_width")[0].value|0, $("#n_height")[0].value|0)
 });
 $("#button_evaluate").on("click", function() {
 	var prefix = ".selected > div > "
-	var mode = $("#FuncMode .selected").html();
+	var mode = $("#FuncMode .selected")[0].id.slice(0,-4);
 	var x_min = env.EvalConst($(prefix + ".x_min")[0].value);
 	var x_max = env.EvalConst($(prefix + ".x_max")[0].value);
 	var y_min = env.EvalConst($(prefix + ".y_min")[0].value);

@@ -12,22 +12,22 @@
 	<h1>Mascat Graph Viewer</h1>
 	<div id="contents">
 		<div id="canvas_outer">
-			<canvas id="main_canvas" width="600" height="600"></canvas>	
+			<canvas id="main_canvas" width="500" height="500"></canvas>	
 		</div>
 
 		<div class="tab_control">
 			<div class="tab_thumb">
-				<span class="selected">Evaluation</span>
-				<span>Console</span>
-				<span>Settings</span>
-				<span>Tips</span>
+				<span id="EvaluationHead" class="selected">Evaluation</span>
+				<span id="ConsoleHead">Console</span>
+				<span id="SettingsHead">Settings</span>
+				<span id="TipsHead">Tips</span>
 			</div>
 			<div class="tab_items">
 				<span id="Evaluation" class="selected">
 					<div class="tab_control">
 						<div id="FuncMode" class="tab_thumb">
-							<span class="selected">Explicit</span>
-							<span>Parameter</span>
+							<span id="ExplicitHead" class="selected">Explicit</span>
+							<span id="ParameterHead">Parameter</span>
 						</div>
 						<div class="tab_items">
 							<span id="Explicit" class="selected">
@@ -77,7 +77,8 @@
 					<button id="button_evaluate">Evaluate</button>
 				</span>
 				<span id="Console">
-					Under Construction
+					<div class="console_viewer">
+					</div>
 				</span>
 				<span id="Settings">
 					<h2>Settings</h2>
